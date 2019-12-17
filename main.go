@@ -71,6 +71,7 @@ func doMetadataGet(suffix string) (string, error) {
 	if resp.StatusCode != 200 {
 		return "", fmt.Errorf("invalid status code from metadata, resp: %v", resp)
 	}
+
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
