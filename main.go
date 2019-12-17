@@ -20,7 +20,7 @@ type authToken struct {
 
 func main() {
 	flag.Parse()
-	http.HandleFunc("/auth_callback", authServer)
+	http.HandleFunc("/git_askpass", authServer)
 	http.ListenAndServe(":"+strconv.Itoa(*port), nil)
 }
 

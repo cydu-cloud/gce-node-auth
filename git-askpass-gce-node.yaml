@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: git-askpass-gce-node
+spec:
+  containers:
+    - name: git-sync
+      # Need the version support GIT_ASKPASS_URL
+      image: k8s.gcr.io/git-sync:latest
+      imagePullPolicy: Always
+      args:
+        - --v=2
+      env:
+        - name: GIT_SYNC_REPO
+          value: https://source.developers.google.com/p/${PROJECT}/r/${REPO_NAME}
+        - name: GIT_SYNC_DEST
+          value: git-data
+        - name: GIT_ASKPASS_URL
+          value: http://localhost:9102/git_askpass
+    - name: git-askpass-gce-node
+      image: gcr.io/${PROJECT}/git-askpass-gce-node:latest
+      imagePullPolicy: Always

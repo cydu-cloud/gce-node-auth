@@ -5,15 +5,14 @@ A sidecar app which use gce node service credentials to provide Git Auth Callbac
 
 ```
 export PROJECT=MY_GCP_PROJECT
-gcloud builds submit --tag gcr.io/${PROJECT}/gce-node-auth  .
+gcloud builds submit --tag gcr.io/${PROJECT}/git-askpass-gce-node .
 ```
 
 # Test
 
 ## Create test repo on GCP
 
-```
-export PROJECT=MY_GCP_PROJECT
+```bash
 export REPO_NAME=MY_REPO_NAME
 gcloud config set project ${PROJECT}
 gcloud source repos create ${REPO_NAME}
@@ -23,14 +22,17 @@ gcloud source repos create ${REPO_NAME}
 ## Apply yaml
 
 
-```
-eval "cat git-sync-with-gce-node-auth.yaml | sed 's/\$PROJECT/$PROJECT/g' | sed 's/\$REPO_NAME/$REPO_NAME/g'" | kubectl apply -f -
+```bash
+eval "cat git-askpass-gce-node.yaml | sed 's/\${PROJECT}/$PROJECT/g' | sed 's/\${REPO_NAME}/$REPO_NAME/g' " | kubectl apply -f -
 ```
 
 ## Check git-sync succeed
 
-```
-kubectl get pod/git-sync-with-gce-node-auth
-kubectl logs pod/git-sync-with-gce-node-auth git-sync
-kubectl exec pod/git-sync-with-gce-node-auth ls /tmp/git/git-data
+```bash
+kubectl port-forward pod/git-askpass-gce-node 9102 9102
+curl "http://localhost:9102/git_askpass"
+
+kubectl get pod/git-askpass-gce-node
+kubectl logs pod/git-askpass-gce-node git-sync
+kubectl exec pod/git-askpass-gce-node ls /tmp/git/git-data
 ```
