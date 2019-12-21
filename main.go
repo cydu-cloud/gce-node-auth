@@ -21,7 +21,7 @@ type authToken struct {
 func main() {
 	flag.Parse()
 	http.HandleFunc("/git_askpass", authServer)
-	http.ListenAndServe(":"+strconv.Itoa(*port), nil)
+	http.ListenAndServe("127.0.0.1:"+strconv.Itoa(*port), nil)
 }
 
 func authServer(w http.ResponseWriter, r *http.Request) {
